@@ -11,15 +11,25 @@ public class Main {
         ArrayList<Player> rating = new ArrayList<>();
         rating.add(GameXO.FIRST);
         rating.add(GameXO.SECOND);
+        File file = new File("rating.txt");
+        try {
+            file.createNewFile();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         try (BufferedReader reader = new BufferedReader(new FileReader(
-                "/Users/kirillkotikov/IdeaProjects/XO/src/ru/kotikov/rating.txt"))) {
+                "rating.txt"))) {
+            int count = 0;
             while (reader.ready()) {
                 String playerIn = reader.readLine();
+                if (count < 2) {
+                    count++;
+                    continue;
+                }
                 String[] parametrs = playerIn.split(" ");
                 Player forAdding = new Player();
-                forAdding.setName(parametrs[2]);
-                forAdding.setNumberOfWins(Integer.parseInt(parametrs[4]));
-                forAdding.setNumberOfLoses(Integer.parseInt(parametrs[6]));
+                forAdding.setName(parametrs[1]);
+                forAdding.setNumberOfWins(Integer.parseInt(parametrs[2]));
                 rating.add(forAdding);
             }
         } catch (FileNotFoundException e) {
@@ -30,15 +40,16 @@ public class Main {
 
         try (
                 BufferedWriter writer = new BufferedWriter(new FileWriter(
-                        "/Users/kirillkotikov/IdeaProjects/XO/src/ru/kotikov/rating.txt", false))
+                        "rating.txt", false))
         ) {
 
             rating.sort((o1, o2) -> o2.getNumberOfWins() - o1.getNumberOfWins());
-
+            writer.write("№ Имя Количество побед:\n\n");
+            int number = 1;
             for (Player playerOut : rating) {
-                writer.write("Имя игрока: " + playerOut.getName() + " побед " + playerOut.getNumberOfWins() +
-                        " поражений " + playerOut.getNumberOfLoses());
+                writer.write(number + " " + playerOut.getName() + " " + playerOut.getNumberOfWins());
                 writer.newLine();
+                number++;
             }
         } catch (FileNotFoundException ex) {
             ex.printStackTrace();
