@@ -6,14 +6,14 @@ import java.util.Scanner;
 public class Game {
 
     static final String[][] PLAYING_FIELD = new String[][]{
-            {"|-|", "|-|", "|-|"},
-            {"|-|", "|-|", "|-|"},
-            {"|-|", "|-|", "|-|"}
+            {"|1|", "|2|", "|3|"},
+            {"|4|", "|5|", "|6|"},
+            {"|7|", "|8|", "|9|"}
     };
     private static byte count = 1;
     private static boolean gameOver = false;
-    public static final Player FIRST = new Player();
-    public static final Player SECOND = new Player();
+    public static final Player FIRST_PLAYER = new Player();
+    public static final Player SECOND_PLAYER = new Player();
 
     // Основной игровой процесс
     public static void game() {
@@ -23,12 +23,12 @@ public class Game {
         }
         // Игровой процесс:
         while (!gameOver) {
-            if (FIRST.getName() == null) {
+            if (FIRST_PLAYER.getName() == null) {
                 Scanner namesScanner = new Scanner(System.in);
                 System.out.println("Первый игрок (ходит крестиками), введи своё имя:");
-                FIRST.setName(namesScanner.nextLine());
+                FIRST_PLAYER.setName(namesScanner.nextLine());
                 System.out.println("Второй игрок (ходит ноликами), введи своё имя:");
-                SECOND.setName(namesScanner.nextLine());
+                SECOND_PLAYER.setName(namesScanner.nextLine());
                 System.out.println("Вот как выглядит игровое поле:");
                 showPlayingField();
             }
@@ -50,48 +50,70 @@ public class Game {
     public static void move(String[][] playingField) {
 
         if (count % 2 == 1) {
-            System.out.println(FIRST.getName() + " (крестики), твой ход! Введи координаты хода (например: \"21\", где 2-номер по вертикали, " +
-                    "1-номер по горизонталли): ");
+            System.out.println(FIRST_PLAYER.getName() + " (крестики), твой ход! Введи координаты хода (число от 1 до 9 включительно): ");
         } else {
-            System.out.println(SECOND.getName() + " (нолики), твой ход! Введи координаты хода (например: \"33\", где 3-номер по вертикали, " +
-                    "3-номер по горизонталли): ");
+            System.out.println(SECOND_PLAYER.getName() + " (нолики), твой ход! Введи координаты хода (число от 1 до 9 включительно): ");
         }
         Scanner scannerMove = new Scanner(System.in);
 
         String coordinates;
-        coordinates = scannerMove.nextLine();
+        coordinates = scannerMove.next();
 
-        if (coordinates.length() != 2) {
-            System.out.println("ай-ай:) ввел какую-то ерунду! Введи нормальные координаты (например - 13)");
+        if (coordinates.length() != 1) {
+            System.out.println("ай-ай:) ввел какую-то ерунду! Введи нормальные координаты (число от 1 до 9 включительно)");
             return;
         }
 
-        char coordinateX, coordinateY;
-        coordinateX = coordinates.charAt(0);
-        coordinateY = coordinates.charAt(1);
+        char coordinate = coordinates.charAt(0);
 
         int x, y;
-        switch (coordinateX) {
-            case '1' -> x = 0;
-            case '2' -> x = 1;
-            case '3' -> x = 2;
-            default -> {
-                System.out.println("ай-ай:) ввел какую-то ерунду! Введи нормальные координаты (например - 32)");
-                return;
+        switch (coordinate) {
+            case '1' -> {
+                x = 0;
+                y = 0;
             }
-        }
-        switch (coordinateY) {
-            case '1' -> y = 0;
-            case '2' -> y = 1;
-            case '3' -> y = 2;
+            case '2' -> {
+                x = 0;
+                y = 1;
+            }
+            case '3' -> {
+                x = 0;
+                y = 2;
+            }
+            case '4' -> {
+                x = 1;
+                y = 0;
+            }
+            case '5' -> {
+                x = 1;
+                y = 1;
+            }
+            case '6' -> {
+                x = 1;
+                y = 2;
+            }
+            case '7' -> {
+                x = 2;
+                y = 0;
+            }
+            case '8' -> {
+                x = 2;
+                y = 1;
+            }
+            case '9' -> {
+                x = 2;
+                y = 2;
+            }
             default -> {
-                System.out.println("ай-ай:) ввел какую-то ерунду! Введи нормальные координаты (например - 33)");
+                System.out.println("ай-ай:) ввел какую-то ерунду! Введи нормальные координаты (число от 1 до 9 включительно)");
                 return;
             }
         }
 
-
-        if (Objects.equals(playingField[x][y], "|-|")) {
+        if (Objects.equals(playingField[x][y], "|1|") || Objects.equals(playingField[x][y], "|2|") || Objects.equals(playingField[x][y], "|3|") ||
+                Objects.equals(playingField[x][y], "|4|") || Objects.equals(playingField[x][y], "|5|") || Objects.equals(playingField[x][y], "|6|") ||
+                Objects.equals(playingField[x][y], "|7|") || Objects.equals(playingField[x][y], "|8|") || Objects.equals(playingField[x][y], "|9|")
+        ) {
             if ((count % 2 == 1)) {
                 playingField[x][y] = "|X|";
             } else {
@@ -107,43 +129,43 @@ public class Game {
     public static void winnerSearch(String[][] playingField) {
         gameOver = (playingField[0][0].equals(playingField[0][1]))
                 && (playingField[0][1].equals(playingField[0][2]))
-                && (!playingField[0][0].equals("|-|"));
+                && (!playingField[0][0].equals("|\\d{1-9}|"));
 
         if ((playingField[1][0].equals(playingField[1][1]))
                 && (playingField[1][1].equals(playingField[1][2]))
-                && (!playingField[1][1].equals("|-|"))) {
+                && (!playingField[1][1].equals("|\\d{1-9}|"))) {
             gameOver = true;
         }
         if ((playingField[2][0].equals(playingField[2][1]))
                 && (playingField[2][1].equals(playingField[2][2]))
-                && (!playingField[2][2].equals("|-|"))) {
+                && (!playingField[2][2].equals("|\\d{1-9}|"))) {
             gameOver = true;
         }
 
         if ((playingField[0][0].equals(playingField[1][0]))
                 && (playingField[1][0].equals(playingField[2][0]))
-                && (!playingField[0][0].equals("|-|"))) {
+                && (!playingField[0][0].equals("|\\d{1-9}|"))) {
             gameOver = true;
         }
         if ((playingField[0][1].equals(playingField[1][1]))
                 && (playingField[1][1].equals(playingField[2][1]))
-                && (!playingField[1][1].equals("|-|"))) {
+                && (!playingField[1][1].equals("|\\d{1-9}|"))) {
             gameOver = true;
         }
         if ((playingField[0][2].equals(playingField[1][2]))
                 && (playingField[1][2].equals(playingField[2][2]))
-                && (!playingField[2][2].equals("|-|"))) {
+                && (!playingField[2][2].equals("|\\d{1-9}|"))) {
             gameOver = true;
         }
 
         if ((playingField[0][0].equals(playingField[1][1]))
                 && (playingField[1][1].equals(playingField[2][2]))
-                && (!playingField[2][2].equals("|-|"))) {
+                && (!playingField[2][2].equals("|\\d{1-9}|"))) {
             gameOver = true;
         }
         if ((playingField[0][2].equals(playingField[1][1]))
                 && (playingField[1][1].equals(playingField[2][0]))
-                && (!playingField[2][0].equals("|-|"))) {
+                && (!playingField[2][0].equals("|\\d{1-9}|"))) {
             gameOver = true;
         }
     }
@@ -153,22 +175,24 @@ public class Game {
     public static void results(byte numbersOfMoves) {
         Scanner scanner = new Scanner(System.in);
         if (gameOver) {
-            if (count > 9) System.out.println("Ничья! Не удивительно %)");
-            else if (numbersOfMoves % 2 == 1) {
-                System.out.println(SECOND.getName() + " (нолик) победил(-а)! А " + FIRST.getName() +
-                        " проиграл(-а) :)");
-                SECOND.setNumberOfWins(SECOND.getNumberOfWins() + 1);
-                FIRST.setNumberOfLoses(FIRST.getNumberOfLoses() + 1);
+            if (count > 9) {
+                System.out.println("Ничья! Не удивительно %)");
+                FIRST_PLAYER.setNumberOfDraws(FIRST_PLAYER.getNumberOfDraws() + 1);
+                SECOND_PLAYER.setNumberOfDraws(SECOND_PLAYER.getNumberOfDraws() + 1);
+            } else if (numbersOfMoves % 2 == 1) {
+                System.out.println(SECOND_PLAYER.getName() + " (нолик) победил(-а)! :)");
+                SECOND_PLAYER.setNumberOfWins(SECOND_PLAYER.getNumberOfWins() + 1);
+                FIRST_PLAYER.setNumberOfLoses(FIRST_PLAYER.getNumberOfLoses() + 1);
             } else {
-                System.out.println(FIRST.getName() + " (крестик) победил(-а)! А " + SECOND.getName() +
-                        " проиграл(-а) :)");
-                FIRST.setNumberOfWins(FIRST.getNumberOfWins() + 1);
-                SECOND.setNumberOfLoses(SECOND.getNumberOfLoses() + 1);
+                System.out.println(FIRST_PLAYER.getName() + " (крестик) победил(-а)! :)");
+                FIRST_PLAYER.setNumberOfWins(FIRST_PLAYER.getNumberOfWins() + 1);
+                SECOND_PLAYER.setNumberOfLoses(SECOND_PLAYER.getNumberOfLoses() + 1);
             }
         }
-        System.out.println("Игра окончена! Общий счёт: \n" + "У игрока " + FIRST.getName() + " " + FIRST.getNumberOfWins() +
-                " побед и " + FIRST.getNumberOfLoses() + " поражений; \n" + "У игрока " + SECOND.getName() + " " +
-                SECOND.getNumberOfWins() + " побед и " + SECOND.getNumberOfLoses() + " поражений");
+        System.out.println("Игра окончена! Общий счёт: \n" + "У игрока " + FIRST_PLAYER.getName() + " " + FIRST_PLAYER.getNumberOfWins() +
+                " побед, " + FIRST_PLAYER.getNumberOfLoses() + " поражений, " + FIRST_PLAYER.getNumberOfDraws() + " игр сыграно в ничью; \n" +
+                "У игрока " + SECOND_PLAYER.getName() + " " + SECOND_PLAYER.getNumberOfWins() + " побед, " + SECOND_PLAYER.getNumberOfLoses() + " поражений, " +
+                SECOND_PLAYER.getNumberOfDraws() + " игр сыграно в ничью.");
         System.out.println("Хотите сыграть ещё разок?;) Введи на клавиатуре ответ \"Да\" или \"Нет\":");
 
         while (true) {
@@ -186,9 +210,11 @@ public class Game {
     // Обновление игрового поля (очистка)
     public static void refreshPlayingField(String[][] playingField) {
 
+        int fieldCount = 1;
         for (int i = 0; i < playingField.length; i++) {
             for (int j = 0; j < playingField.length; j++) {
-                playingField[i][j] = "|-|";
+                playingField[i][j] = "|" + fieldCount + "|";
+                fieldCount++;
             }
         }
     }
