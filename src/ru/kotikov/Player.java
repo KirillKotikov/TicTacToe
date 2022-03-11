@@ -2,7 +2,7 @@ package ru.kotikov;
 
 public class Player {
 
-   private String name;
+    private String name;
     private int numberOfWins = 0;
     private int numberOfLoses = 0;
 
