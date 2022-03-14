@@ -6,6 +6,32 @@ public class Player {
     private int numberOfWins = 0;
     private int numberOfLoses = 0;
     private int numberOfDraws = 0;
+    private String id;
+    private String symbol;
+
+    public Player() {
+    }
+
+    public Player(String id, String symbol) {
+        this.id = id;
+        this.symbol = symbol;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getSymbol() {
+        return symbol;
+    }
+
+    public void setSymbol(String symbol) {
+        this.symbol = symbol;
+    }
 
     public String getName() {
         return name;
@@ -37,5 +63,19 @@ public class Player {
 
     public void setNumberOfDraws(int numberOfDraws) {
         this.numberOfDraws = numberOfDraws;
+    }
+
+
+
+    @Override
+    public String toString() {
+        return "Player{" +
+                "name='" + name + '\'' +
+                ", numberOfWins=" + numberOfWins +
+                ", numberOfLoses=" + numberOfLoses +
+                ", numberOfDraws=" + numberOfDraws +
+                ", id='" + id + '\'' +
+                ", symbol='" + symbol + '\'' +
+                '}';
     }
 }
