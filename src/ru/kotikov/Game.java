@@ -144,7 +144,7 @@ public class Game {
                 Game.showPlayingField();
                 //При завершении раунда выводится результат и спрашивает о новом раунде
                 if (gameOver) {
-                    results(movesCounter);
+                    results(movesCounter, PLAYING_FIELD);
                     Game.refreshPlayingField(Game.PLAYING_FIELD);
                     Game.movesCounter = 1;
                 }
@@ -155,7 +155,7 @@ public class Game {
     }
 
     // Поиск возможного победителя
-    public static void winnerSearch(String[][] playingField) {
+    public static boolean winnerSearch(String[][] playingField) {
         gameOver = (playingField[0][0].equals(playingField[0][1]))
                 && (playingField[0][1].equals(playingField[0][2]));
 
@@ -189,15 +189,17 @@ public class Game {
                 && (playingField[1][1].equals(playingField[2][0]))) {
             gameOver = true;
         }
+        return gameOver;
     }
 
 
     // Подведение результатов игры. Возвращает 0 - ничья, 1 - выиграл первый игрок, 2 - выиграл второй игрок.
-    public static int results(byte numbersOfMoves) {
+    public static int results(byte numbersOfMoves, String [][] playingField) {
+        boolean draw = !winnerSearch(playingField);
         int result = 0;
         Scanner scanner = new Scanner(System.in);
         if (gameOver) {
-            if (movesCounter > 9) {
+            if (movesCounter > 9 && draw) {
                 System.out.println("Ничья! Не удивительно %)");
                 FIRST_PLAYER.setNumberOfDraws(FIRST_PLAYER.getNumberOfDraws() + 1);
                 SECOND_PLAYER.setNumberOfDraws(SECOND_PLAYER.getNumberOfDraws() + 1);
